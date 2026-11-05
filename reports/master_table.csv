@@ -1,0 +1,34 @@
+order_id,customer_id,product_id,order_date,quantity,discount_pct,product_name,category,unit_price,unit_cost,customer_name,city,region,revenue,profit,year,month,quarter,month_name,day_of_week
+O1001,C001,P003,2024-01-08,1,0.05,Wireless Headphones,Electronics,129.99,72.0,Aarav Mehta,Mumbai,West,123.4905,51.4905,2024,1,1,January,Monday
+O1002,C002,P001,2024-01-12,2,0.0,Trail Running Shoes,Sports,89.99,48.0,Diya Sharma,Delhi,North,179.98,83.97999999999999,2024,1,1,January,Friday
+O1003,C003,P005,2024-01-18,3,0.1,Insulated Bottle,Home,24.99,9.0,Vihaan Patel,Ahmedabad,West,67.473,40.473,2024,1,1,January,Thursday
+O1004,C004,P004,2024-02-03,1,0.05,Smart Watch,Electronics,199.99,118.0,Anaya Singh,Jaipur,North,189.9905,71.9905,2024,2,1,February,Saturday
+O1005,C005,P002,2024-02-11,2,0.0,Yoga Mat,Sports,29.99,12.0,Arjun Nair,Kochi,South,59.98,35.98,2024,2,1,February,Sunday
+O1006,C006,P007,2024-02-22,1,0.15,Winter Jacket,Clothing,149.99,82.0,Isha Reddy,Hyderabad,South,127.4915,45.4915,2024,2,1,February,Thursday
+O1007,C007,P006,2024-03-04,2,0.05,Desk Lamp,Home,44.99,21.0,Kabir Das,Kolkata,East,85.481,43.480999999999995,2024,3,1,March,Monday
+O1008,C008,P003,2024-03-16,1,0.1,Wireless Headphones,Electronics,129.99,72.0,Meera Iyer,Chennai,South,116.99100000000001,44.991000000000014,2024,3,1,March,Saturday
+O1009,C009,P008,2024-03-27,2,0.0,Everyday Backpack,Clothing,69.99,34.0,Rohan Gupta,Lucknow,North,139.98,71.97999999999999,2024,3,1,March,Wednesday
+O1010,C010,P001,2024-04-02,1,0.05,Trail Running Shoes,Sports,89.99,48.0,Sara Khan,Pune,West,85.4905,37.4905,2024,4,2,April,Tuesday
+O1011,C011,P004,2024-04-15,1,0.0,Smart Watch,Electronics,199.99,118.0,Advik Joshi,Indore,Central,199.99,81.99000000000001,2024,4,2,April,Monday
+O1012,C012,P005,2024-04-26,4,0.0,Insulated Bottle,Home,24.99,9.0,Kiara Bose,Bhubaneswar,East,99.96,63.959999999999994,2024,4,2,April,Friday
+O1013,C013,P007,2024-05-07,1,0.1,Winter Jacket,Clothing,149.99,82.0,Reyansh Rao,Bengaluru,South,134.991,52.991000000000014,2024,5,2,May,Tuesday
+O1014,C014,P002,2024-05-19,3,0.05,Yoga Mat,Sports,29.99,12.0,Myra Kapoor,Chandigarh,North,85.47149999999999,49.47149999999999,2024,5,2,May,Sunday
+O1015,C015,P003,2024-05-29,2,0.0,Wireless Headphones,Electronics,129.99,72.0,Atharv Shah,Surat,West,259.98,115.98000000000002,2024,5,2,May,Wednesday
+O1016,C001,P008,2024-06-06,1,0.0,Everyday Backpack,Clothing,69.99,34.0,Aarav Mehta,Mumbai,West,69.99,35.989999999999995,2024,6,2,June,Thursday
+O1017,C002,P006,2024-06-18,2,0.1,Desk Lamp,Home,44.99,21.0,Diya Sharma,Delhi,North,80.982,38.982,2024,6,2,June,Tuesday
+O1018,C003,P004,2024-06-30,1,0.05,Smart Watch,Electronics,199.99,118.0,Vihaan Patel,Ahmedabad,West,189.9905,71.9905,2024,6,2,June,Sunday
+O1019,C004,P001,2024-07-09,2,0.0,Trail Running Shoes,Sports,89.99,48.0,Anaya Singh,Jaipur,North,179.98,83.97999999999999,2024,7,3,July,Tuesday
+O1020,C005,P005,2024-07-21,2,0.05,Insulated Bottle,Home,24.99,9.0,Arjun Nair,Kochi,South,47.480999999999995,29.480999999999995,2024,7,3,July,Sunday
+O1021,C006,P003,2024-08-02,1,0.0,Wireless Headphones,Electronics,129.99,72.0,Isha Reddy,Hyderabad,South,129.99,57.99000000000001,2024,8,3,August,Friday
+O1022,C007,P007,2024-08-14,1,0.2,Winter Jacket,Clothing,149.99,82.0,Kabir Das,Kolkata,East,119.99200000000002,37.99200000000002,2024,8,3,August,Wednesday
+O1023,C008,P002,2024-08-25,2,0.1,Yoga Mat,Sports,29.99,12.0,Meera Iyer,Chennai,South,53.982,29.982,2024,8,3,August,Sunday
+O1024,C009,P004,2024-09-05,1,0.0,Smart Watch,Electronics,199.99,118.0,Rohan Gupta,Lucknow,North,199.99,81.99000000000001,2024,9,3,September,Thursday
+O1025,C010,P008,2024-09-17,1,0.05,Everyday Backpack,Clothing,69.99,34.0,Sara Khan,Pune,West,66.4905,32.4905,2024,9,3,September,Tuesday
+O1026,C011,P001,2024-10-01,3,0.1,Trail Running Shoes,Sports,89.99,48.0,Advik Joshi,Indore,Central,242.97299999999998,98.97299999999998,2024,10,4,October,Tuesday
+O1027,C012,P003,2024-10-13,1,0.0,Wireless Headphones,Electronics,129.99,72.0,Kiara Bose,Bhubaneswar,East,129.99,57.99000000000001,2024,10,4,October,Sunday
+O1028,C013,P006,2024-10-24,2,0.05,Desk Lamp,Home,44.99,21.0,Reyansh Rao,Bengaluru,South,85.481,43.480999999999995,2024,10,4,October,Thursday
+O1029,C014,P007,2024-11-06,1,0.0,Winter Jacket,Clothing,149.99,82.0,Myra Kapoor,Chandigarh,North,149.99,67.99000000000001,2024,11,4,November,Wednesday
+O1030,C015,P004,2024-11-18,1,0.1,Smart Watch,Electronics,199.99,118.0,Atharv Shah,Surat,West,179.991,61.991000000000014,2024,11,4,November,Monday
+O1031,C001,P002,2024-12-03,2,0.05,Yoga Mat,Sports,29.99,12.0,Aarav Mehta,Mumbai,West,56.980999999999995,32.980999999999995,2024,12,4,December,Tuesday
+O1032,C005,P003,2024-12-14,1,0.0,Wireless Headphones,Electronics,129.99,72.0,Arjun Nair,Kochi,South,129.99,57.99000000000001,2024,12,4,December,Saturday
+O1033,C010,P005,2024-12-22,3,0.1,Insulated Bottle,Home,24.99,9.0,Sara Khan,Pune,West,67.473,40.473,2024,12,4,December,Sunday

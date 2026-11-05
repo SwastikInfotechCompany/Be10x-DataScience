@@ -1,0 +1,59 @@
+{
+  "benchmark": {
+    "operation": "Apply a 10% salary increase to 1,000,000 employees",
+    "repeats": 5,
+    "list_median_seconds": 0.0990616999915801,
+    "numpy_median_seconds": 0.005156399973202497,
+    "time_efficiency_gap_list_over_numpy": 19.211407281513818,
+    "results_match": true
+  },
+  "array_audit": {
+    "inventory": {
+      "shape": [
+        4,
+        6
+      ],
+      "ndim": 2,
+      "size": 24,
+      "dtype": "int64",
+      "nbytes": 192,
+      "warehouse_totals_axis_1": [
+        21,
+        57,
+        93,
+        129
+      ],
+      "product_totals_axis_0": [
+        40,
+        44,
+        48,
+        52,
+        56,
+        60
+      ]
+    },
+    "weekly_temperatures": {
+      "shape": [
+        3,
+        7
+      ],
+      "ndim": 2,
+      "size": 21,
+      "dtype": "float64",
+      "daily_averages_axis_0": [
+        18.333333333333332,
+        19.333333333333332,
+        17.333333333333332,
+        20.333333333333332,
+        21.333333333333332,
+        18.333333333333332,
+        16.333333333333332
+      ],
+      "city_averages_axis_1": [
+        18.428571428571427,
+        22.428571428571427,
+        15.428571428571429
+      ]
+    }
+  }
+}

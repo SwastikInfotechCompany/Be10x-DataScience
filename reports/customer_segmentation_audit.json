@@ -1,0 +1,201 @@
+{
+  "project": "Industrial Data Analytics - Part 2: Pattern Discovery with Unsupervised Clustering",
+  "scaling_audit": {
+    "features": [
+      "age",
+      "annual_spend"
+    ],
+    "means": {
+      "age": 43.91,
+      "annual_spend": 8739.29
+    },
+    "stds": {
+      "age": 15.04,
+      "annual_spend": 5945.99
+    },
+    "sample_count": 140
+  },
+  "elbow_analysis": {
+    "k_metrics": [
+      {
+        "k": 1,
+        "inertia": 280.0,
+        "silhouette_score": null,
+        "silhouette_percentage": null
+      },
+      {
+        "k": 2,
+        "inertia": 105.83,
+        "silhouette_score": 0.5876,
+        "silhouette_percentage": 58.76
+      },
+      {
+        "k": 3,
+        "inertia": 39.19,
+        "silhouette_score": 0.7027,
+        "silhouette_percentage": 70.27
+      },
+      {
+        "k": 4,
+        "inertia": 13.0,
+        "silhouette_score": 0.7491,
+        "silhouette_percentage": 74.91
+      },
+      {
+        "k": 5,
+        "inertia": 10.66,
+        "silhouette_score": 0.6584,
+        "silhouette_percentage": 65.84
+      },
+      {
+        "k": 6,
+        "inertia": 9.05,
+        "silhouette_score": 0.5558,
+        "silhouette_percentage": 55.58
+      },
+      {
+        "k": 7,
+        "inertia": 7.81,
+        "silhouette_score": 0.4754,
+        "silhouette_percentage": 47.54
+      },
+      {
+        "k": 8,
+        "inertia": 6.64,
+        "silhouette_score": 0.4909,
+        "silhouette_percentage": 49.09
+      }
+    ],
+    "optimal_k_elbow": 4,
+    "optimal_k_silhouette": 4,
+    "peak_silhouette_score": 0.7491,
+    "peak_silhouette_pct": 74.91,
+    "industrial_validation": "Elbow graph sharply drops from K=1 to K=4 and flattens thereafter. Global maximum Silhouette Score of 74.91% empirically confirms K=4 as the true natural segmentation."
+  },
+  "overall_silhouette_score": 0.7491,
+  "overall_silhouette_percentage": 74.91,
+  "cluster_profiles": {
+    "0": {
+      "cluster_id": 0,
+      "persona_name": "Mid-Age Practical Buyers",
+      "loyalty_tier": "Tier 3: Silver Family",
+      "customer_count": 35,
+      "percentage_of_base": 25.0,
+      "centroid_real_units": {
+        "age": 42.1,
+        "annual_spend": 4438.92,
+        "monthly_spend": 369.91,
+        "purchase_frequency": 16.5
+      },
+      "centroid_scaled": [
+        -0.119,
+        -0.723
+      ],
+      "mean_silhouette": 0.7153,
+      "email_strategy": "Monthly bulk-buy essentials, family bundle discounts, and loyalty point multipliers.",
+      "recommended_discount": "Buy-2-Get-1-Free on Pantry & Home Essentials"
+    },
+    "1": {
+      "cluster_id": 1,
+      "persona_name": "Affluent VIP Champions",
+      "loyalty_tier": "Tier 1: Platinum",
+      "customer_count": 35,
+      "percentage_of_base": 25.0,
+      "centroid_real_units": {
+        "age": 44.2,
+        "annual_spend": 17869.65,
+        "monthly_spend": 1489.14,
+        "purchase_frequency": 39.4
+      },
+      "centroid_scaled": [
+        0.018,
+        1.536
+      ],
+      "mean_silhouette": 0.7543,
+      "email_strategy": "VIP concierge invite, early exclusive product launches, and zero-minimum free express delivery.",
+      "recommended_discount": "Exclusive 15% VIP Luxury Perk (No minimum cart)"
+    },
+    "2": {
+      "cluster_id": 2,
+      "persona_name": "Mature High-Value Loyalists",
+      "loyalty_tier": "Tier 2: Gold Loyalty",
+      "customer_count": 35,
+      "percentage_of_base": 25.0,
+      "centroid_real_units": {
+        "age": 65.2,
+        "annual_spend": 9773.83,
+        "monthly_spend": 814.49,
+        "purchase_frequency": 24.3
+      },
+      "centroid_scaled": [
+        1.416,
+        0.174
+      ],
+      "mean_silhouette": 0.7449,
+      "email_strategy": "Personalized service recommendations, customer appreciation rewards, and seasonal catalog highlights.",
+      "recommended_discount": "Flat $75 Loyalty Reward on orders above $300"
+    },
+    "3": {
+      "cluster_id": 3,
+      "persona_name": "Young Digital Savers",
+      "loyalty_tier": "Tier 4: Growth / Emerging",
+      "customer_count": 35,
+      "percentage_of_base": 25.0,
+      "centroid_real_units": {
+        "age": 24.1,
+        "annual_spend": 2874.77,
+        "monthly_spend": 239.56,
+        "purchase_frequency": 13.5
+      },
+      "centroid_scaled": [
+        -1.314,
+        -0.986
+      ],
+      "mean_silhouette": 0.7818,
+      "email_strategy": "App push alerts, flash weekend discounts, student/early-career deals, and social share referral credits.",
+      "recommended_discount": "25% Flash Discount on Trending & Gadgets (Cart > $50)"
+    }
+  },
+  "new_customer_classification": {
+    "new_customer_input": {
+      "age": 30.0,
+      "annual_spend": 4500.0,
+      "monthly_spend": 375.0
+    },
+    "scaled_feature_vector": [
+      -0.9245,
+      -0.713
+    ],
+    "assigned_cluster_id": 3,
+    "assigned_loyalty_group": "Young Digital Savers",
+    "assigned_tier": "Tier 4: Growth / Emerging",
+    "distance_to_nearest_centroid": 0.4756,
+    "distances_to_all_centroids": {
+      "0": {
+        "persona": "Mid-Age Practical Buyers",
+        "distance_scaled": 0.8056
+      },
+      "1": {
+        "persona": "Affluent VIP Champions",
+        "distance_scaled": 2.4385
+      },
+      "2": {
+        "persona": "Mature High-Value Loyalists",
+        "distance_scaled": 2.503
+      },
+      "3": {
+        "persona": "Young Digital Savers",
+        "distance_scaled": 0.4756
+      }
+    },
+    "centroid_reference": {
+      "age": 24.1,
+      "annual_spend": 2874.77,
+      "monthly_spend": 239.56,
+      "purchase_frequency": 13.5
+    },
+    "personalized_email_action": "App push alerts, flash weekend discounts, student/early-career deals, and social share referral credits.",
+    "recommended_discount_offer": "25% Flash Discount on Trending & Gadgets (Cart > $50)",
+    "executive_rational": "The candidate customer (Age 30.0, Spend $4,500.00) has normalized coordinates [-0.925, -0.713], closest to Cluster 3 ('Young Digital Savers' - Centroid: Age 24.1, Spend $2,874.77). Target with 25% Flash Discount on Trending & Gadgets (Cart > $50)."
+  }
+}

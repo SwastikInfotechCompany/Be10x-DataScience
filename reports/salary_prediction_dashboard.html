@@ -1,0 +1,1950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Part 1: HR Salary Predictive Analytics Audit Dashboard</title>
+  <!-- Chart.js for interactive rendering -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --success: #16a34a;
+      --warning: #f59e0b;
+      --danger: #dc2626;
+      --bg: #0b1120;
+      --card-bg: #1e293b;
+      --card-border: #334155;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --highlight: #38bdf8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      padding: 24px;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    header {
+      background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 26px 32px;
+      margin-bottom: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0,0,0,0.4);
+    }
+    .badge {
+      display: inline-block;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+    .badge-success { background: rgba(22, 163, 74, 0.2); color: #4ade80; border: 1px solid #22c55e; }
+    .badge-primary { background: rgba(37, 99, 235, 0.2); color: #60a5fa; border: 1px solid #3b82f6; }
+    .dept-tag {
+      background: rgba(255, 255, 255, 0.06);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+    }
+    
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-bottom: 24px;
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(480px, 1fr));
+      gap: 24px;
+      margin-bottom: 24px;
+    }
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 22px;
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    }
+    .card-title {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+    }
+    .card-value {
+      font-size: 1.85rem;
+      font-weight: 800;
+      color: var(--text);
+      display: flex;
+      align-items: baseline;
+      gap: 8px;
+    }
+    .card-subtext {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+    
+    /* Interactive Calculator Card */
+    .calculator-card {
+      background: linear-gradient(145deg, #1e293b 0%, #1e1b4b 100%);
+      border: 2px solid #6366f1;
+    }
+    .slider-container {
+      margin: 20px 0;
+    }
+    .slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 10px;
+      border-radius: 5px;
+      background: #334155;
+      outline: none;
+    }
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: #38bdf8;
+      cursor: pointer;
+      box-shadow: 0 0 12px #38bdf8;
+    }
+    .pred-highlight {
+      color: #38bdf8;
+      font-size: 2.3rem;
+      font-weight: 800;
+    }
+    .equation-box {
+      background: rgba(15, 23, 42, 0.7);
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-family: monospace;
+      font-size: 0.92rem;
+      color: #38bdf8;
+      border: 1px solid #334155;
+      margin-top: 14px;
+    }
+    
+    /* Table Styling */
+    .table-container {
+      max-height: 480px;
+      overflow-y: auto;
+      margin-top: 12px;
+      border: 1px solid #334155;
+      border-radius: 8px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+    th {
+      background-color: #0f172a;
+      color: var(--text-muted);
+      padding: 12px 14px;
+      position: sticky;
+      top: 0;
+      border-bottom: 2px solid var(--card-border);
+      z-index: 2;
+    }
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid #334155;
+    }
+    tr:hover {
+      background-color: rgba(255, 255, 255, 0.04);
+    }
+    
+    /* Tabs */
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 10px 18px;
+      border-radius: 10px;
+      background: #1e293b;
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    
+    .btn {
+      padding: 9px 16px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.88rem;
+    }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-secondary { background: #334155; color: white; }
+    .btn:hover { opacity: 0.9; }
+    
+    .chart-gallery {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+      gap: 20px;
+    }
+    .chart-box {
+      background: #0f172a;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #334155;
+    }
+    .chart-box img {
+      width: 100%;
+      height: auto;
+      border-radius: 6px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    
+    <!-- Top Header -->
+    <header>
+      <div>
+        <div style="display:flex; align-items:center; gap:12px; margin-bottom: 6px; flex-wrap: wrap;">
+          <h1 style="font-size: 1.75rem; font-weight: 800;">HR Salary Predictive Analytics Dashboard</h1>
+          <span class="badge badge-success">Industrial Grade (R² = 99.57%)</span>
+        </div>
+        <p style="color: var(--text-muted);">
+          Part 1 Deliverable: Supervised Learning (Y = MX + C), Data Hygiene & Candidate Prediction Audit
+        </p>
+      </div>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <button onclick="window.print()" class="btn btn-secondary">🖨️ Print / Save PDF</button>
+        <a href="salary_prediction_audit.json" download class="btn btn-secondary">📥 Audit JSON</a>
+        <a href="cleaned_hr_dataset.csv" download class="btn btn-primary">📊 Cleaned CSV</a>
+      </div>
+    </header>
+
+    <!-- KPI Metric Cards -->
+    <div class="grid-4">
+      <div class="card">
+        <div class="card-title">Regression Equation</div>
+        <div class="card-value" style="font-size: 1.15rem; font-family: monospace; color: #38bdf8;">
+          Y = 5,176.59 * X + 48,024.45
+        </div>
+        <div class="card-subtext">Slope (M) = $5,176.59/yr | Base = $48,024.45</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Model Accuracy (R² Score)</div>
+        <div class="card-value" style="color: #4ade80;">
+          99.57%
+        </div>
+        <div class="card-subtext">Corporate 95% Benchmark: <strong style="color:#4ade80;">PASSED</strong></div>
+      </div>
+      <div class="card">
+        <div class="card-title">Mean Absolute Error (MAE)</div>
+        <div class="card-value">
+          $2,267.79
+        </div>
+        <div class="card-subtext">Root Mean Squared (RMSE): $2,820.38</div>
+      </div>
+      <div class="card">
+        <div class="card-title">15-Yr Candidate Deliverable</div>
+        <div class="card-value" style="color: #facc15;">
+          $125,673.29
+        </div>
+        <div class="card-subtext">Monthly: $10,472.77/mo</div>
+      </div>
+    </div>
+
+    <!-- Interactive Candidate Predictor & Cleaning Funnel -->
+    <div class="grid-2">
+      <!-- Calculator -->
+      <div class="card calculator-card">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h2 style="font-size: 1.2rem; font-weight: 700;">Interactive Candidate Salary Predictor</h2>
+          <span class="badge badge-primary">Dynamic Y = MX + C</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-top: 4px;">
+          Adjust candidate experience below to compute live industrial salary recommendation:
+        </p>
+
+        <div class="slider-container">
+          <div style="display:flex; justify-content:space-between; margin-bottom: 8px;">
+            <label style="font-weight: 600;">Years of Experience (X):</label>
+            <span id="expVal" style="color: #38bdf8; font-weight: 800; font-size: 1.25rem;">15.0 Years</span>
+          </div>
+          <input type="range" min="0" max="30" step="0.5" value="15.0" class="slider" id="expSlider" oninput="updatePrediction()">
+          <div style="display:flex; justify-content:space-between; font-size:0.75rem; color: var(--text-muted); margin-top:6px;">
+            <span>0 Yrs (Entry)</span>
+            <span>5 Yrs</span>
+            <span>10 Yrs (Mid)</span>
+            <span style="color:#facc15; font-weight:bold;">15 Yrs (Target Deliverable)</span>
+            <span>20+ Yrs (Principal)</span>
+          </div>
+        </div>
+
+        <div style="background: rgba(0,0,0,0.3); border-radius: 12px; padding: 18px; margin-top: 14px;">
+          <div style="color: var(--text-muted); font-size: 0.85rem; text-transform: uppercase;">Predicted Annual Compensation:</div>
+          <div id="livePredictedSalary" class="pred-highlight">$125,673.29</div>
+          <div id="liveMonthlySalary" style="color: #94a3b8; font-size: 0.95rem; margin-top: 2px;">Equivalent to $10,472.77 / month</div>
+          
+          <div style="margin-top: 14px; padding-top: 14px; border-top: 1px solid #334155; display: flex; justify-content: space-between; font-size: 0.85rem;">
+            <div>
+              <span style="color: var(--text-muted);">95% Budget Range (± 1.96 RMSE):</span><br>
+              <strong id="liveRange" style="color: #4ade80;">$120,145.34 - $131,201.23</strong>
+            </div>
+            <div>
+              <span style="color: var(--text-muted);">Corporate Budget Grade:</span><br>
+              <strong style="color: #facc15;">Certified Offer Band</strong>
+            </div>
+          </div>
+        </div>
+
+        <div class="equation-box" id="liveCalcBreakdown">
+          Salary = (5,176.59 * 15.0) + 48,024.45 = $125,673.29
+        </div>
+      </div>
+
+      <!-- Data Hygiene Summary -->
+      <div class="card">
+        <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 6px;">Data Hygiene & Cleaning Audit</h2>
+        <p style="color: var(--text-muted); font-size: 0.88rem; margin-bottom: 16px;">
+          Strict execution of the 3-step industrial data hygiene workflow:
+        </p>
+        
+        <div style="display:flex; flex-direction:column; gap:12px;">
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid #334155; border-radius: 10px; padding: 12px 16px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong style="color: #ef4444;">1. Duplicate Elimination</strong>
+              <div style="font-size:0.8rem; color:var(--text-muted);">Purged copied employee entries and ID collisions</div>
+            </div>
+            <span class="badge" style="background:rgba(239, 68, 68, 0.2); color:#f87171;">-15 Rows</span>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid #334155; border-radius: 10px; padding: 12px 16px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong style="color: #38bdf8;">2. Median Imputation</strong>
+              <div style="font-size:0.8rem; color:var(--text-muted);">
+                Filled NaNs with robust medians (Exp: 13.0 yrs, Sal: $105,900)
+              </div>
+            </div>
+            <span class="badge" style="background:rgba(56, 189, 248, 0.2); color:#38bdf8;">+20 Imputed</span>
+          </div>
+
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid #334155; border-radius: 10px; padding: 12px 16px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong style="color: #f59e0b;">3. Outlier Elimination</strong>
+              <div style="font-size:0.8rem; color:var(--text-muted);">
+                Purged negative salaries, multimillion typos, and IQR violations
+              </div>
+            </div>
+            <span class="badge" style="background:rgba(245, 158, 11, 0.2); color:#fbbf24;">-9 Outliers</span>
+          </div>
+
+          <div style="background: rgba(34, 197, 94, 0.1); border: 1px solid rgba(34, 197, 94, 0.3); border-radius: 10px; padding: 12px 16px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <strong style="color: #4ade80;">Certified Clean Dataset</strong>
+              <div style="font-size:0.8rem; color:var(--text-muted);">Verified Retention Rate: 85.45%</div>
+            </div>
+            <span class="badge badge-success">141 Clean Records</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tabs Section for Visualizations & Data Explorer -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('chartTab')">📈 Interactive Live Chart</button>
+      <button class="tab-btn" onclick="switchTab('galleryTab')">🖼️ High-Res Audit Visualizations</button>
+      <button class="tab-btn" onclick="switchTab('dataTab')">📋 Cleaned Dataset Explorer (141 Rows)</button>
+      <button class="tab-btn" onclick="switchTab('auditTab')">📝 Executive Audit Report</button>
+    </div>
+
+    <!-- Tab 1: Interactive Chart -->
+    <div id="chartTab" class="tab-content active">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 12px;">
+          <div>
+            <h2 style="font-size: 1.2rem; font-weight: 700;">Live Experience vs. Salary Regression Plot</h2>
+            <p style="color: var(--text-muted); font-size: 0.85rem;">
+              Scatter points represent clean records. Drag the calculator slider to watch the gold star candidate marker move along the regression trendline in real time.
+            </p>
+          </div>
+        </div>
+        <div style="height: 480px; position: relative;">
+          <canvas id="regressionChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 2: High-Res Matplotlib Image Gallery -->
+    <div id="galleryTab" class="tab-content">
+      <div class="chart-gallery">
+        <div class="chart-box">
+          <h3 style="margin-bottom:8px; font-size: 1rem; color: #38bdf8;">1. Regression Fit & 15-Year Candidate Marker</h3>
+          <img src="salary_regression_plot.png" alt="Salary Regression Plot" onerror="this.style.display='none'">
+        </div>
+        <div class="chart-box">
+          <h3 style="margin-bottom:8px; font-size: 1rem; color: #38bdf8;">2. Data Hygiene Funnel & Outlier Analysis</h3>
+          <img src="data_cleaning_audit.png" alt="Data Cleaning Audit" onerror="this.style.display='none'">
+        </div>
+        <div class="chart-box">
+          <h3 style="margin-bottom:8px; font-size: 1rem; color: #38bdf8;">3. Model Residual Error Distribution</h3>
+          <img src="model_residuals_plot.png" alt="Model Residuals Plot" onerror="this.style.display='none'">
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Clean Data Table -->
+    <div id="dataTab" class="tab-content">
+      <div class="card">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 8px; flex-wrap: wrap; gap: 10px;">
+          <h2 style="font-size: 1.2rem; font-weight: 700;">Certified Clean Dataset Records (141 Entries)</h2>
+          <input type="text" id="tableSearch" placeholder="Search by ID or Dept..." onkeyup="filterTable()" 
+                 style="background: #0f172a; border: 1px solid var(--card-border); color: white; padding: 8px 14px; border-radius: 8px;">
+        </div>
+        <div class="table-container">
+          <table id="dataTable">
+            <thead>
+              <tr>
+                <th>Candidate ID</th>
+                <th>Department</th>
+                <th>Experience</th>
+                <th>Performance</th>
+                <th>Actual Salary</th>
+                <th>Predicted (Y=MX+C)</th>
+                <th>Residual Error</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>EMP-1001</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>13.0 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$105,200.00</strong></td>
+                <td>$115,320.12</td>
+                <td style="color: #f87171; font-weight: 600;">-10,120.12</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1002</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>23.8 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$173,700.00</strong></td>
+                <td>$171,227.29</td>
+                <td style="color: #4ade80; font-weight: 600;">+2,472.71</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1003</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>18.6 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$141,500.00</strong></td>
+                <td>$144,309.02</td>
+                <td style="color: #facc15; font-weight: 600;">-2,809.02</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1004</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>15.4 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$127,900.00</strong></td>
+                <td>$127,743.94</td>
+                <td style="color: #4ade80; font-weight: 600;">+156.06</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1005</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>4.7 yrs</td>
+                <td>5.0 ★</td>
+                <td><strong>$77,000.00</strong></td>
+                <td>$72,354.42</td>
+                <td style="color: #f87171; font-weight: 600;">+4,645.58</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1006</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>4.7 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$70,300.00</strong></td>
+                <td>$72,354.42</td>
+                <td style="color: #4ade80; font-weight: 600;">-2,054.42</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1007</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>2.4 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$63,100.00</strong></td>
+                <td>$60,448.27</td>
+                <td style="color: #facc15; font-weight: 600;">+2,651.73</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1008</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>21.8 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$163,800.00</strong></td>
+                <td>$160,874.11</td>
+                <td style="color: #facc15; font-weight: 600;">+2,925.89</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1009</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>15.4 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$126,800.00</strong></td>
+                <td>$127,743.94</td>
+                <td style="color: #4ade80; font-weight: 600;">-943.94</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1010</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>18.0 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$142,800.00</strong></td>
+                <td>$141,203.07</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,596.93</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1011</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>1.5 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$52,600.00</strong></td>
+                <td>$55,789.33</td>
+                <td style="color: #facc15; font-weight: 600;">-3,189.33</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1012</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>24.3 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$178,700.00</strong></td>
+                <td>$173,815.59</td>
+                <td style="color: #f87171; font-weight: 600;">+4,884.41</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1014</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>6.1 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$81,800.00</strong></td>
+                <td>$79,601.65</td>
+                <td style="color: #4ade80; font-weight: 600;">+2,198.35</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1015</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>5.4 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$77,200.00</strong></td>
+                <td>$75,978.04</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,221.96</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1016</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>5.4 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$79,700.00</strong></td>
+                <td>$75,978.04</td>
+                <td style="color: #facc15; font-weight: 600;">+3,721.96</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1017</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>8.3 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$91,000.00</strong></td>
+                <td>$90,990.15</td>
+                <td style="color: #4ade80; font-weight: 600;">+9.85</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1018</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>13.6 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$119,100.00</strong></td>
+                <td>$118,426.07</td>
+                <td style="color: #4ade80; font-weight: 600;">+673.93</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1019</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>13.0 yrs</td>
+                <td>2.5 ★</td>
+                <td><strong>$107,700.00</strong></td>
+                <td>$115,320.12</td>
+                <td style="color: #f87171; font-weight: 600;">-7,620.12</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1020</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>8.0 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$91,800.00</strong></td>
+                <td>$89,437.17</td>
+                <td style="color: #4ade80; font-weight: 600;">+2,362.83</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1021</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>15.7 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$132,900.00</strong></td>
+                <td>$129,296.91</td>
+                <td style="color: #facc15; font-weight: 600;">+3,603.09</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1022</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>4.3 yrs</td>
+                <td>2.5 ★</td>
+                <td><strong>$68,900.00</strong></td>
+                <td>$70,283.79</td>
+                <td style="color: #4ade80; font-weight: 600;">-1,383.79</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1023</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>8.0 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$89,000.00</strong></td>
+                <td>$89,437.17</td>
+                <td style="color: #4ade80; font-weight: 600;">-437.17</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1024</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>9.8 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$101,400.00</strong></td>
+                <td>$98,755.03</td>
+                <td style="color: #facc15; font-weight: 600;">+2,644.97</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1025</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>13.0 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$107,400.00</strong></td>
+                <td>$115,320.12</td>
+                <td style="color: #f87171; font-weight: 600;">-7,920.12</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1027</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>5.8 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$78,800.00</strong></td>
+                <td>$78,048.67</td>
+                <td style="color: #4ade80; font-weight: 600;">+751.33</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1028</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>13.3 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$105,900.00</strong></td>
+                <td>$116,873.10</td>
+                <td style="color: #f87171; font-weight: 600;">-10,973.10</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1029</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>15.2 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$127,600.00</strong></td>
+                <td>$126,708.62</td>
+                <td style="color: #4ade80; font-weight: 600;">+891.38</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1030</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>2.1 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$58,800.00</strong></td>
+                <td>$58,895.29</td>
+                <td style="color: #4ade80; font-weight: 600;">-95.29</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1031</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>15.6 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$132,000.00</strong></td>
+                <td>$128,779.25</td>
+                <td style="color: #facc15; font-weight: 600;">+3,220.75</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1032</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>5.1 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$75,900.00</strong></td>
+                <td>$74,425.06</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,474.94</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1033</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>2.6 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$64,200.00</strong></td>
+                <td>$61,483.58</td>
+                <td style="color: #facc15; font-weight: 600;">+2,716.42</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1034</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>23.8 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$173,700.00</strong></td>
+                <td>$171,227.29</td>
+                <td style="color: #4ade80; font-weight: 600;">+2,472.71</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1036</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>20.4 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$153,800.00</strong></td>
+                <td>$153,626.89</td>
+                <td style="color: #4ade80; font-weight: 600;">+173.11</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1037</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>8.3 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$91,700.00</strong></td>
+                <td>$90,990.15</td>
+                <td style="color: #4ade80; font-weight: 600;">+709.85</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1038</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>3.3 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$66,600.00</strong></td>
+                <td>$65,107.20</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,492.80</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1039</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>17.4 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$139,200.00</strong></td>
+                <td>$138,097.12</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,102.88</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1040</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>13.0 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$110,100.00</strong></td>
+                <td>$115,320.12</td>
+                <td style="color: #f87171; font-weight: 600;">-5,220.12</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1041</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>3.9 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$69,100.00</strong></td>
+                <td>$68,213.15</td>
+                <td style="color: #4ade80; font-weight: 600;">+886.85</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1042</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>12.9 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$105,900.00</strong></td>
+                <td>$114,802.46</td>
+                <td style="color: #f87171; font-weight: 600;">-8,902.46</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1043</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>1.8 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$63,300.00</strong></td>
+                <td>$57,342.31</td>
+                <td style="color: #f87171; font-weight: 600;">+5,957.69</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1044</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>22.8 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$168,500.00</strong></td>
+                <td>$166,050.70</td>
+                <td style="color: #4ade80; font-weight: 600;">+2,449.30</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1045</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>7.2 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$85,300.00</strong></td>
+                <td>$85,295.90</td>
+                <td style="color: #4ade80; font-weight: 600;">+4.10</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1046</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>16.9 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$139,800.00</strong></td>
+                <td>$135,508.82</td>
+                <td style="color: #facc15; font-weight: 600;">+4,291.18</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1047</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>8.5 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$95,600.00</strong></td>
+                <td>$92,025.46</td>
+                <td style="color: #facc15; font-weight: 600;">+3,574.54</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1048</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>13.5 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$123,300.00</strong></td>
+                <td>$117,908.41</td>
+                <td style="color: #f87171; font-weight: 600;">+5,391.59</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1049</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>14.1 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$122,900.00</strong></td>
+                <td>$121,014.37</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,885.63</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1050</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>5.4 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$79,000.00</strong></td>
+                <td>$75,978.04</td>
+                <td style="color: #facc15; font-weight: 600;">+3,021.96</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1051</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>24.3 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$172,900.00</strong></td>
+                <td>$173,815.59</td>
+                <td style="color: #4ade80; font-weight: 600;">-915.59</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1052</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>19.6 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$151,300.00</strong></td>
+                <td>$149,485.61</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,814.39</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1053</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>23.5 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$169,900.00</strong></td>
+                <td>$169,674.32</td>
+                <td style="color: #4ade80; font-weight: 600;">+225.68</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1054</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>22.5 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$164,400.00</strong></td>
+                <td>$164,497.73</td>
+                <td style="color: #4ade80; font-weight: 600;">-97.73</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1055</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>15.3 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$130,600.00</strong></td>
+                <td>$127,226.28</td>
+                <td style="color: #facc15; font-weight: 600;">+3,373.72</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1057</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>3.1 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$60,700.00</strong></td>
+                <td>$64,071.88</td>
+                <td style="color: #facc15; font-weight: 600;">-3,371.88</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1058</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>5.7 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$79,500.00</strong></td>
+                <td>$77,531.01</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,968.99</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1060</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>8.8 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$95,500.00</strong></td>
+                <td>$93,578.44</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,921.56</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1061</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>10.3 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$103,500.00</strong></td>
+                <td>$101,343.33</td>
+                <td style="color: #4ade80; font-weight: 600;">+2,156.67</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1062</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>7.5 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$90,900.00</strong></td>
+                <td>$86,848.88</td>
+                <td style="color: #facc15; font-weight: 600;">+4,051.12</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1063</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>20.9 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$159,100.00</strong></td>
+                <td>$156,215.18</td>
+                <td style="color: #facc15; font-weight: 600;">+2,884.82</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1064</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>9.6 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$97,700.00</strong></td>
+                <td>$97,719.71</td>
+                <td style="color: #4ade80; font-weight: 600;">-19.71</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1065</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>7.7 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$89,100.00</strong></td>
+                <td>$87,884.19</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,215.81</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1066</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>14.0 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$120,300.00</strong></td>
+                <td>$120,496.71</td>
+                <td style="color: #4ade80; font-weight: 600;">-196.71</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1067</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>4.4 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$72,000.00</strong></td>
+                <td>$70,801.45</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,198.55</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1068</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>20.3 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$152,800.00</strong></td>
+                <td>$153,109.23</td>
+                <td style="color: #4ade80; font-weight: 600;">-309.23</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1069</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>2.8 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$64,400.00</strong></td>
+                <td>$62,518.90</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,881.10</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1070</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>24.7 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$177,500.00</strong></td>
+                <td>$175,886.22</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,613.78</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1071</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>19.5 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$151,100.00</strong></td>
+                <td>$148,967.96</td>
+                <td style="color: #4ade80; font-weight: 600;">+2,132.04</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1072</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>5.8 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$79,300.00</strong></td>
+                <td>$78,048.67</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,251.33</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1073</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>1.1 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$49,300.00</strong></td>
+                <td>$53,718.70</td>
+                <td style="color: #facc15; font-weight: 600;">-4,418.70</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1074</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>20.6 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$154,100.00</strong></td>
+                <td>$154,662.20</td>
+                <td style="color: #4ade80; font-weight: 600;">-562.20</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1075</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>18.0 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$142,000.00</strong></td>
+                <td>$141,203.07</td>
+                <td style="color: #4ade80; font-weight: 600;">+796.93</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1076</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>18.5 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$144,100.00</strong></td>
+                <td>$143,791.36</td>
+                <td style="color: #4ade80; font-weight: 600;">+308.64</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1077</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>19.5 yrs</td>
+                <td>5.0 ★</td>
+                <td><strong>$152,300.00</strong></td>
+                <td>$148,967.96</td>
+                <td style="color: #facc15; font-weight: 600;">+3,332.04</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1078</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>2.8 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$63,700.00</strong></td>
+                <td>$62,518.90</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,181.10</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1079</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>9.6 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$102,400.00</strong></td>
+                <td>$97,719.71</td>
+                <td style="color: #f87171; font-weight: 600;">+4,680.29</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1080</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>3.8 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$69,500.00</strong></td>
+                <td>$67,695.49</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,804.51</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1081</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>21.7 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$161,500.00</strong></td>
+                <td>$160,356.45</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,143.55</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1082</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>16.0 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$128,900.00</strong></td>
+                <td>$130,849.89</td>
+                <td style="color: #4ade80; font-weight: 600;">-1,949.89</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1083</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>8.9 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$92,400.00</strong></td>
+                <td>$94,096.10</td>
+                <td style="color: #4ade80; font-weight: 600;">-1,696.10</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1084</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>2.5 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$62,600.00</strong></td>
+                <td>$60,965.92</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,634.08</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1085</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>8.5 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$94,100.00</strong></td>
+                <td>$92,025.46</td>
+                <td style="color: #4ade80; font-weight: 600;">+2,074.54</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1086</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>8.8 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$97,700.00</strong></td>
+                <td>$93,578.44</td>
+                <td style="color: #facc15; font-weight: 600;">+4,121.56</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1087</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>18.5 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$143,300.00</strong></td>
+                <td>$143,791.36</td>
+                <td style="color: #4ade80; font-weight: 600;">-491.36</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1088</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>16.3 yrs</td>
+                <td>2.5 ★</td>
+                <td><strong>$131,600.00</strong></td>
+                <td>$132,402.87</td>
+                <td style="color: #4ade80; font-weight: 600;">-802.87</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1089</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>22.3 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$165,600.00</strong></td>
+                <td>$163,462.41</td>
+                <td style="color: #4ade80; font-weight: 600;">+2,137.59</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1090</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>12.3 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$115,600.00</strong></td>
+                <td>$111,696.51</td>
+                <td style="color: #facc15; font-weight: 600;">+3,903.49</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1091</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>3.9 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$70,300.00</strong></td>
+                <td>$68,213.15</td>
+                <td style="color: #4ade80; font-weight: 600;">+2,086.85</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1092</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>18.1 yrs</td>
+                <td>5.0 ★</td>
+                <td><strong>$147,300.00</strong></td>
+                <td>$141,720.73</td>
+                <td style="color: #f87171; font-weight: 600;">+5,579.27</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1093</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>19.3 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$150,500.00</strong></td>
+                <td>$147,932.64</td>
+                <td style="color: #facc15; font-weight: 600;">+2,567.36</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1094</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>14.5 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$126,100.00</strong></td>
+                <td>$123,085.01</td>
+                <td style="color: #facc15; font-weight: 600;">+3,014.99</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1095</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>19.5 yrs</td>
+                <td>2.5 ★</td>
+                <td><strong>$150,600.00</strong></td>
+                <td>$148,967.96</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,632.04</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1096</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>12.9 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$105,900.00</strong></td>
+                <td>$114,802.46</td>
+                <td style="color: #f87171; font-weight: 600;">-8,902.46</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1097</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>13.5 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$117,000.00</strong></td>
+                <td>$117,908.41</td>
+                <td style="color: #4ade80; font-weight: 600;">-908.41</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1098</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>13.0 yrs</td>
+                <td>5.0 ★</td>
+                <td><strong>$108,700.00</strong></td>
+                <td>$115,320.12</td>
+                <td style="color: #f87171; font-weight: 600;">-6,620.12</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1099</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>1.6 yrs</td>
+                <td>5.0 ★</td>
+                <td><strong>$61,400.00</strong></td>
+                <td>$56,306.99</td>
+                <td style="color: #f87171; font-weight: 600;">+5,093.01</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1100</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>3.6 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$70,100.00</strong></td>
+                <td>$66,660.17</td>
+                <td style="color: #facc15; font-weight: 600;">+3,439.83</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1101</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>1.8 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$57,200.00</strong></td>
+                <td>$57,342.31</td>
+                <td style="color: #4ade80; font-weight: 600;">-142.31</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1102</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>16.3 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$132,700.00</strong></td>
+                <td>$132,402.87</td>
+                <td style="color: #4ade80; font-weight: 600;">+297.13</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1103</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>8.5 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$90,900.00</strong></td>
+                <td>$92,025.46</td>
+                <td style="color: #4ade80; font-weight: 600;">-1,125.46</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1104</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>13.2 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$105,900.00</strong></td>
+                <td>$116,355.44</td>
+                <td style="color: #f87171; font-weight: 600;">-10,455.44</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1106</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>7.0 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$84,800.00</strong></td>
+                <td>$84,260.58</td>
+                <td style="color: #4ade80; font-weight: 600;">+539.42</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1107</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>13.0 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$106,300.00</strong></td>
+                <td>$115,320.12</td>
+                <td style="color: #f87171; font-weight: 600;">-9,020.12</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1108</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>19.1 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$144,600.00</strong></td>
+                <td>$146,897.32</td>
+                <td style="color: #4ade80; font-weight: 600;">-2,297.32</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1109</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>6.5 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$81,500.00</strong></td>
+                <td>$81,672.29</td>
+                <td style="color: #4ade80; font-weight: 600;">-172.29</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1110</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>2.8 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$65,000.00</strong></td>
+                <td>$62,518.90</td>
+                <td style="color: #4ade80; font-weight: 600;">+2,481.10</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1111</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>8.0 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$92,600.00</strong></td>
+                <td>$89,437.17</td>
+                <td style="color: #facc15; font-weight: 600;">+3,162.83</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1112</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>4.9 yrs</td>
+                <td>5.0 ★</td>
+                <td><strong>$76,500.00</strong></td>
+                <td>$73,389.74</td>
+                <td style="color: #facc15; font-weight: 600;">+3,110.26</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1114</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>20.4 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$156,100.00</strong></td>
+                <td>$153,626.89</td>
+                <td style="color: #4ade80; font-weight: 600;">+2,473.11</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1115</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>16.2 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$133,500.00</strong></td>
+                <td>$131,885.21</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,614.79</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1116</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>21.9 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$160,100.00</strong></td>
+                <td>$161,391.77</td>
+                <td style="color: #4ade80; font-weight: 600;">-1,291.77</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1117</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>20.3 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$154,700.00</strong></td>
+                <td>$153,109.23</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,590.77</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1118</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>5.5 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$78,500.00</strong></td>
+                <td>$76,495.70</td>
+                <td style="color: #4ade80; font-weight: 600;">+2,004.30</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1119</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>22.4 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$167,100.00</strong></td>
+                <td>$163,980.07</td>
+                <td style="color: #facc15; font-weight: 600;">+3,119.93</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1120</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>13.9 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$118,300.00</strong></td>
+                <td>$119,979.05</td>
+                <td style="color: #4ade80; font-weight: 600;">-1,679.05</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1121</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>20.4 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$155,100.00</strong></td>
+                <td>$153,626.89</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,473.11</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1122</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>22.5 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$166,100.00</strong></td>
+                <td>$164,497.73</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,602.27</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1124</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>3.6 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$69,400.00</strong></td>
+                <td>$66,660.17</td>
+                <td style="color: #facc15; font-weight: 600;">+2,739.83</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1125</strong></td>
+                <td><span class="dept-tag">Analytics</span></td>
+                <td>6.5 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$83,700.00</strong></td>
+                <td>$81,672.29</td>
+                <td style="color: #4ade80; font-weight: 600;">+2,027.71</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1126</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>13.0 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$106,800.00</strong></td>
+                <td>$115,320.12</td>
+                <td style="color: #f87171; font-weight: 600;">-8,520.12</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1127</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>20.6 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$160,000.00</strong></td>
+                <td>$154,662.20</td>
+                <td style="color: #f87171; font-weight: 600;">+5,337.80</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1128</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>21.7 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$161,500.00</strong></td>
+                <td>$160,356.45</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,143.55</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1129</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>1.2 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$54,600.00</strong></td>
+                <td>$54,236.36</td>
+                <td style="color: #4ade80; font-weight: 600;">+363.64</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1130</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>13.3 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$117,500.00</strong></td>
+                <td>$116,873.10</td>
+                <td style="color: #4ade80; font-weight: 600;">+626.90</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1131</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>13.0 yrs</td>
+                <td>4.5 ★</td>
+                <td><strong>$105,500.00</strong></td>
+                <td>$115,320.12</td>
+                <td style="color: #f87171; font-weight: 600;">-9,820.12</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1132</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>6.3 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$80,400.00</strong></td>
+                <td>$80,636.97</td>
+                <td style="color: #4ade80; font-weight: 600;">-236.97</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1133</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>3.9 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$66,300.00</strong></td>
+                <td>$68,213.15</td>
+                <td style="color: #4ade80; font-weight: 600;">-1,913.15</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1134</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>9.1 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$95,000.00</strong></td>
+                <td>$95,131.42</td>
+                <td style="color: #4ade80; font-weight: 600;">-131.42</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1135</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>23.6 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$171,400.00</strong></td>
+                <td>$170,191.97</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,208.03</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1136</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>8.8 yrs</td>
+                <td>2.5 ★</td>
+                <td><strong>$89,100.00</strong></td>
+                <td>$93,578.44</td>
+                <td style="color: #facc15; font-weight: 600;">-4,478.44</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1137</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>13.5 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$118,600.00</strong></td>
+                <td>$117,908.41</td>
+                <td style="color: #4ade80; font-weight: 600;">+691.59</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1138</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>17.9 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$141,800.00</strong></td>
+                <td>$140,685.41</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,114.59</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1139</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>9.7 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$100,000.00</strong></td>
+                <td>$98,237.37</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,762.63</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1140</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>24.3 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$177,100.00</strong></td>
+                <td>$173,815.59</td>
+                <td style="color: #facc15; font-weight: 600;">+3,284.41</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1141</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>24.1 yrs</td>
+                <td>2.5 ★</td>
+                <td><strong>$174,300.00</strong></td>
+                <td>$172,780.27</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,519.73</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1142</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>7.0 yrs</td>
+                <td>2.5 ★</td>
+                <td><strong>$82,700.00</strong></td>
+                <td>$84,260.58</td>
+                <td style="color: #4ade80; font-weight: 600;">-1,560.58</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1144</strong></td>
+                <td><span class="dept-tag">Product</span></td>
+                <td>8.2 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$92,300.00</strong></td>
+                <td>$90,472.49</td>
+                <td style="color: #4ade80; font-weight: 600;">+1,827.51</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1145</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>7.8 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$87,600.00</strong></td>
+                <td>$88,401.85</td>
+                <td style="color: #4ade80; font-weight: 600;">-801.85</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1146</strong></td>
+                <td><span class="dept-tag">Operations</span></td>
+                <td>1.9 yrs</td>
+                <td>3.5 ★</td>
+                <td><strong>$56,300.00</strong></td>
+                <td>$57,859.97</td>
+                <td style="color: #4ade80; font-weight: 600;">-1,559.97</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1147</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>15.6 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$134,600.00</strong></td>
+                <td>$128,779.25</td>
+                <td style="color: #f87171; font-weight: 600;">+5,820.75</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1148</strong></td>
+                <td><span class="dept-tag">Engineering</span></td>
+                <td>13.1 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$105,900.00</strong></td>
+                <td>$115,837.78</td>
+                <td style="color: #f87171; font-weight: 600;">-9,937.78</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1149</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>2.2 yrs</td>
+                <td>4.0 ★</td>
+                <td><strong>$59,500.00</strong></td>
+                <td>$59,412.95</td>
+                <td style="color: #4ade80; font-weight: 600;">+87.05</td>
+              </tr>
+              <tr>
+                <td><strong>EMP-1150</strong></td>
+                <td><span class="dept-tag">Finance</span></td>
+                <td>7.7 yrs</td>
+                <td>3.0 ★</td>
+                <td><strong>$84,100.00</strong></td>
+                <td>$87,884.19</td>
+                <td style="color: #facc15; font-weight: 600;">-3,784.19</td>
+              </tr>
+
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Text Audit -->
+    <div id="auditTab" class="tab-content">
+      <div class="card">
+        <h2 style="font-size: 1.2rem; font-weight: 700; margin-bottom: 12px;">Executive Salary Prediction Audit Deliverable</h2>
+        <pre style="background: #0f172a; padding: 20px; border-radius: 10px; font-family: monospace; font-size: 0.88rem; color: #38bdf8; overflow-x: auto; line-height: 1.6; border: 1px solid #334155;">
+{
+  "project": "Industrial Data Analytics - Part 1: Predictive Analytics",
+  "cleaning_audit": {
+    "initial_rows": 165,
+    "final_rows": 141,
+    "retention_pct": 85.45,
+    "duplicates_removed": 15,
+    "nulls_imputed": {
+      "experience_years": 8,
+      "performance_rating": 6,
+      "salary": 6
+    },
+    "imputation_method": "Median Filling",
+    "median_values_used": {
+      "experience_years": 13.0,
+      "performance_rating": 3.5,
+      "salary": 105900.0
+    },
+    "outliers_removed": 9,
+    "salary_bounds": {
+      "lower_bound": 25000.0,
+      "upper_bound": 240425.0
+    },
+    "experience_bounds": {
+      "lower_bound": 0.0,
+      "upper_bound": 38.74
+    }
+  },
+  "model_results": {
+    "equation": "Y = 5,176.59 * X + 48,024.45",
+    "equation_latex": "Salary = 5,176.59 \\times \\text{Experience} + 48,024.45",
+    "slope_m": 5176.59,
+    "intercept_c": 48024.45,
+    "metrics": {
+      "mae": 2267.79,
+      "mse": 7954566.08,
+      "rmse": 2820.38,
+      "r2_score": 0.9957,
+      "r2_percentage": 99.57,
+      "r2_full_dataset": 0.9902,
+      "mae_full_dataset": 2633.66,
+      "accuracy_pct": 99.57,
+      "is_budget_grade_95pct": true
+    },
+    "multi_feature_model": {
+      "slope_experience": 5172.406004817541,
+      "slope_rating": 513.0502214658604,
+      "intercept": 46206.403238157975,
+      "r2": 0.9962820750054635,
+      "mae": 2071.8222727988
+    }
+  },
+  "candidate_15_yr_prediction": {
+    "candidate_experience_years": 15.0,
+    "predicted_annual_salary": 125673.29,
+    "predicted_monthly_salary": 10472.77,
+    "margin_of_error_95pct": 5527.94,
+    "recommended_salary_range": {
+      "min_offer": 120145.34,
+      "target_offer": 125673.29,
+      "max_offer": 131201.23
+    },
+    "multi_feature_prediction_with_rating": {
+      "rating": 4.0,
+      "predicted_salary": 125844.69
+    },
+    "step_by_step_calculation": "Predicted Salary = (5,176.59 * 15.0) + 48,024.45 = $125,673.29"
+  }
+}
+        </pre>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const slope_m = 5176.59;
+    const intercept_c = 48024.45;
+    const rmse = 2820.38;
+    const rawData = [{"candidate_id": "EMP-1001", "department": "Product", "experience_years": 13.0, "performance_rating": 4.5, "salary": 105200.0}, {"candidate_id": "EMP-1002", "department": "Finance", "experience_years": 23.8, "performance_rating": 3.0, "salary": 173700.0}, {"candidate_id": "EMP-1003", "department": "Operations", "experience_years": 18.6, "performance_rating": 3.0, "salary": 141500.0}, {"candidate_id": "EMP-1004", "department": "Finance", "experience_years": 15.4, "performance_rating": 3.5, "salary": 127900.0}, {"candidate_id": "EMP-1005", "department": "Product", "experience_years": 4.7, "performance_rating": 5.0, "salary": 77000.0}, {"candidate_id": "EMP-1006", "department": "Analytics", "experience_years": 4.7, "performance_rating": 3.0, "salary": 70300.0}, {"candidate_id": "EMP-1007", "department": "Finance", "experience_years": 2.4, "performance_rating": 4.0, "salary": 63100.0}, {"candidate_id": "EMP-1008", "department": "Analytics", "experience_years": 21.8, "performance_rating": 4.0, "salary": 163800.0}, {"candidate_id": "EMP-1009", "department": "Operations", "experience_years": 15.4, "performance_rating": 3.0, "salary": 126800.0}, {"candidate_id": "EMP-1010", "department": "Engineering", "experience_years": 18.0, "performance_rating": 4.0, "salary": 142800.0}, {"candidate_id": "EMP-1011", "department": "Operations", "experience_years": 1.5, "performance_rating": 3.5, "salary": 52600.0}, {"candidate_id": "EMP-1012", "department": "Finance", "experience_years": 24.3, "performance_rating": 4.0, "salary": 178700.0}, {"candidate_id": "EMP-1014", "department": "Analytics", "experience_years": 6.1, "performance_rating": 3.5, "salary": 81800.0}, {"candidate_id": "EMP-1015", "department": "Product", "experience_years": 5.4, "performance_rating": 3.0, "salary": 77200.0}, {"candidate_id": "EMP-1016", "department": "Analytics", "experience_years": 5.4, "performance_rating": 3.5, "salary": 79700.0}, {"candidate_id": "EMP-1017", "department": "Product", "experience_years": 8.3, "performance_rating": 3.5, "salary": 91000.0}, {"candidate_id": "EMP-1018", "department": "Engineering", "experience_years": 13.6, "performance_rating": 3.0, "salary": 119100.0}, {"candidate_id": "EMP-1019", "department": "Finance", "experience_years": 13.0, "performance_rating": 2.5, "salary": 107700.0}, {"candidate_id": "EMP-1020", "department": "Product", "experience_years": 8.0, "performance_rating": 3.5, "salary": 91800.0}, {"candidate_id": "EMP-1021", "department": "Engineering", "experience_years": 15.7, "performance_rating": 4.0, "salary": 132900.0}, {"candidate_id": "EMP-1022", "department": "Analytics", "experience_years": 4.3, "performance_rating": 2.5, "salary": 68900.0}, {"candidate_id": "EMP-1023", "department": "Analytics", "experience_years": 8.0, "performance_rating": 3.5, "salary": 89000.0}, {"candidate_id": "EMP-1024", "department": "Engineering", "experience_years": 9.8, "performance_rating": 3.0, "salary": 101400.0}, {"candidate_id": "EMP-1025", "department": "Analytics", "experience_years": 13.0, "performance_rating": 4.0, "salary": 107400.0}, {"candidate_id": "EMP-1027", "department": "Product", "experience_years": 5.8, "performance_rating": 4.0, "salary": 78800.0}, {"candidate_id": "EMP-1028", "department": "Product", "experience_years": 13.3, "performance_rating": 3.5, "salary": 105900.0}, {"candidate_id": "EMP-1029", "department": "Engineering", "experience_years": 15.2, "performance_rating": 4.5, "salary": 127600.0}, {"candidate_id": "EMP-1030", "department": "Product", "experience_years": 2.1, "performance_rating": 3.0, "salary": 58800.0}, {"candidate_id": "EMP-1031", "department": "Product", "experience_years": 15.6, "performance_rating": 3.5, "salary": 132000.0}, {"candidate_id": "EMP-1032", "department": "Product", "experience_years": 5.1, "performance_rating": 3.5, "salary": 75900.0}, {"candidate_id": "EMP-1033", "department": "Operations", "experience_years": 2.6, "performance_rating": 4.5, "salary": 64200.0}, {"candidate_id": "EMP-1034", "department": "Finance", "experience_years": 23.8, "performance_rating": 4.5, "salary": 173700.0}, {"candidate_id": "EMP-1036", "department": "Operations", "experience_years": 20.4, "performance_rating": 4.0, "salary": 153800.0}, {"candidate_id": "EMP-1037", "department": "Product", "experience_years": 8.3, "performance_rating": 4.0, "salary": 91700.0}, {"candidate_id": "EMP-1038", "department": "Engineering", "experience_years": 3.3, "performance_rating": 3.5, "salary": 66600.0}, {"candidate_id": "EMP-1039", "department": "Product", "experience_years": 17.4, "performance_rating": 3.5, "salary": 139200.0}, {"candidate_id": "EMP-1040", "department": "Finance", "experience_years": 13.0, "performance_rating": 3.0, "salary": 110100.0}, {"candidate_id": "EMP-1041", "department": "Product", "experience_years": 3.9, "performance_rating": 3.0, "salary": 69100.0}, {"candidate_id": "EMP-1042", "department": "Engineering", "experience_years": 12.9, "performance_rating": 4.5, "salary": 105900.0}, {"candidate_id": "EMP-1043", "department": "Finance", "experience_years": 1.8, "performance_rating": 4.5, "salary": 63300.0}, {"candidate_id": "EMP-1044", "department": "Product", "experience_years": 22.8, "performance_rating": 4.0, "salary": 168500.0}, {"candidate_id": "EMP-1045", "department": "Finance", "experience_years": 7.2, "performance_rating": 3.5, "salary": 85300.0}, {"candidate_id": "EMP-1046", "department": "Analytics", "experience_years": 16.9, "performance_rating": 3.5, "salary": 139800.0}, {"candidate_id": "EMP-1047", "department": "Analytics", "experience_years": 8.5, "performance_rating": 4.0, "salary": 95600.0}, {"candidate_id": "EMP-1048", "department": "Product", "experience_years": 13.5, "performance_rating": 4.5, "salary": 123300.0}, {"candidate_id": "EMP-1049", "department": "Finance", "experience_years": 14.1, "performance_rating": 4.5, "salary": 122900.0}, {"candidate_id": "EMP-1050", "department": "Engineering", "experience_years": 5.4, "performance_rating": 3.5, "salary": 79000.0}, {"candidate_id": "EMP-1051", "department": "Product", "experience_years": 24.3, "performance_rating": 4.0, "salary": 172900.0}, {"candidate_id": "EMP-1052", "department": "Analytics", "experience_years": 19.6, "performance_rating": 3.0, "salary": 151300.0}, {"candidate_id": "EMP-1053", "department": "Analytics", "experience_years": 23.5, "performance_rating": 3.0, "salary": 169900.0}, {"candidate_id": "EMP-1054", "department": "Product", "experience_years": 22.5, "performance_rating": 4.5, "salary": 164400.0}, {"candidate_id": "EMP-1055", "department": "Finance", "experience_years": 15.3, "performance_rating": 4.0, "salary": 130600.0}, {"candidate_id": "EMP-1057", "department": "Finance", "experience_years": 3.1, "performance_rating": 3.0, "salary": 60700.0}, {"candidate_id": "EMP-1058", "department": "Analytics", "experience_years": 5.7, "performance_rating": 4.0, "salary": 79500.0}, {"candidate_id": "EMP-1060", "department": "Operations", "experience_years": 8.8, "performance_rating": 3.0, "salary": 95500.0}, {"candidate_id": "EMP-1061", "department": "Analytics", "experience_years": 10.3, "performance_rating": 3.5, "salary": 103500.0}, {"candidate_id": "EMP-1062", "department": "Engineering", "experience_years": 7.5, "performance_rating": 4.0, "salary": 90900.0}, {"candidate_id": "EMP-1063", "department": "Product", "experience_years": 20.9, "performance_rating": 4.0, "salary": 159100.0}, {"candidate_id": "EMP-1064", "department": "Product", "experience_years": 9.6, "performance_rating": 3.0, "salary": 97700.0}, {"candidate_id": "EMP-1065", "department": "Finance", "experience_years": 7.7, "performance_rating": 3.5, "salary": 89100.0}, {"candidate_id": "EMP-1066", "department": "Analytics", "experience_years": 14.0, "performance_rating": 3.0, "salary": 120300.0}, {"candidate_id": "EMP-1067", "department": "Engineering", "experience_years": 4.4, "performance_rating": 3.5, "salary": 72000.0}, {"candidate_id": "EMP-1068", "department": "Finance", "experience_years": 20.3, "performance_rating": 4.0, "salary": 152800.0}, {"candidate_id": "EMP-1069", "department": "Operations", "experience_years": 2.8, "performance_rating": 4.0, "salary": 64400.0}, {"candidate_id": "EMP-1070", "department": "Finance", "experience_years": 24.7, "performance_rating": 4.0, "salary": 177500.0}, {"candidate_id": "EMP-1071", "department": "Finance", "experience_years": 19.5, "performance_rating": 4.0, "salary": 151100.0}, {"candidate_id": "EMP-1072", "department": "Analytics", "experience_years": 5.8, "performance_rating": 3.5, "salary": 79300.0}, {"candidate_id": "EMP-1073", "department": "Operations", "experience_years": 1.1, "performance_rating": 3.0, "salary": 49300.0}, {"candidate_id": "EMP-1074", "department": "Finance", "experience_years": 20.6, "performance_rating": 3.5, "salary": 154100.0}, {"candidate_id": "EMP-1075", "department": "Engineering", "experience_years": 18.0, "performance_rating": 3.5, "salary": 142000.0}, {"candidate_id": "EMP-1076", "department": "Engineering", "experience_years": 18.5, "performance_rating": 3.0, "salary": 144100.0}, {"candidate_id": "EMP-1077", "department": "Product", "experience_years": 19.5, "performance_rating": 5.0, "salary": 152300.0}, {"candidate_id": "EMP-1078", "department": "Operations", "experience_years": 2.8, "performance_rating": 3.5, "salary": 63700.0}, {"candidate_id": "EMP-1079", "department": "Operations", "experience_years": 9.6, "performance_rating": 4.5, "salary": 102400.0}, {"candidate_id": "EMP-1080", "department": "Product", "experience_years": 3.8, "performance_rating": 4.0, "salary": 69500.0}, {"candidate_id": "EMP-1081", "department": "Finance", "experience_years": 21.7, "performance_rating": 4.0, "salary": 161500.0}, {"candidate_id": "EMP-1082", "department": "Operations", "experience_years": 16.0, "performance_rating": 3.5, "salary": 128900.0}, {"candidate_id": "EMP-1083", "department": "Engineering", "experience_years": 8.9, "performance_rating": 3.5, "salary": 92400.0}, {"candidate_id": "EMP-1084", "department": "Engineering", "experience_years": 2.5, "performance_rating": 3.5, "salary": 62600.0}, {"candidate_id": "EMP-1085", "department": "Analytics", "experience_years": 8.5, "performance_rating": 3.0, "salary": 94100.0}, {"candidate_id": "EMP-1086", "department": "Operations", "experience_years": 8.8, "performance_rating": 4.0, "salary": 97700.0}, {"candidate_id": "EMP-1087", "department": "Finance", "experience_years": 18.5, "performance_rating": 3.5, "salary": 143300.0}, {"candidate_id": "EMP-1088", "department": "Product", "experience_years": 16.3, "performance_rating": 2.5, "salary": 131600.0}, {"candidate_id": "EMP-1089", "department": "Product", "experience_years": 22.3, "performance_rating": 4.0, "salary": 165600.0}, {"candidate_id": "EMP-1090", "department": "Finance", "experience_years": 12.3, "performance_rating": 3.0, "salary": 115600.0}, {"candidate_id": "EMP-1091", "department": "Analytics", "experience_years": 3.9, "performance_rating": 4.5, "salary": 70300.0}, {"candidate_id": "EMP-1092", "department": "Product", "experience_years": 18.1, "performance_rating": 5.0, "salary": 147300.0}, {"candidate_id": "EMP-1093", "department": "Operations", "experience_years": 19.3, "performance_rating": 4.5, "salary": 150500.0}, {"candidate_id": "EMP-1094", "department": "Analytics", "experience_years": 14.5, "performance_rating": 3.5, "salary": 126100.0}, {"candidate_id": "EMP-1095", "department": "Operations", "experience_years": 19.5, "performance_rating": 2.5, "salary": 150600.0}, {"candidate_id": "EMP-1096", "department": "Engineering", "experience_years": 12.9, "performance_rating": 4.5, "salary": 105900.0}, {"candidate_id": "EMP-1097", "department": "Analytics", "experience_years": 13.5, "performance_rating": 3.5, "salary": 117000.0}, {"candidate_id": "EMP-1098", "department": "Product", "experience_years": 13.0, "performance_rating": 5.0, "salary": 108700.0}, {"candidate_id": "EMP-1099", "department": "Analytics", "experience_years": 1.6, "performance_rating": 5.0, "salary": 61400.0}, {"candidate_id": "EMP-1100", "department": "Analytics", "experience_years": 3.6, "performance_rating": 4.5, "salary": 70100.0}, {"candidate_id": "EMP-1101", "department": "Analytics", "experience_years": 1.8, "performance_rating": 3.5, "salary": 57200.0}, {"candidate_id": "EMP-1102", "department": "Analytics", "experience_years": 16.3, "performance_rating": 3.5, "salary": 132700.0}, {"candidate_id": "EMP-1103", "department": "Operations", "experience_years": 8.5, "performance_rating": 4.5, "salary": 90900.0}, {"candidate_id": "EMP-1104", "department": "Engineering", "experience_years": 13.2, "performance_rating": 3.5, "salary": 105900.0}, {"candidate_id": "EMP-1106", "department": "Analytics", "experience_years": 7.0, "performance_rating": 3.5, "salary": 84800.0}, {"candidate_id": "EMP-1107", "department": "Product", "experience_years": 13.0, "performance_rating": 4.5, "salary": 106300.0}, {"candidate_id": "EMP-1108", "department": "Analytics", "experience_years": 19.1, "performance_rating": 4.0, "salary": 144600.0}, {"candidate_id": "EMP-1109", "department": "Product", "experience_years": 6.5, "performance_rating": 3.5, "salary": 81500.0}, {"candidate_id": "EMP-1110", "department": "Operations", "experience_years": 2.8, "performance_rating": 3.0, "salary": 65000.0}, {"candidate_id": "EMP-1111", "department": "Product", "experience_years": 8.0, "performance_rating": 4.0, "salary": 92600.0}, {"candidate_id": "EMP-1112", "department": "Finance", "experience_years": 4.9, "performance_rating": 5.0, "salary": 76500.0}, {"candidate_id": "EMP-1114", "department": "Product", "experience_years": 20.4, "performance_rating": 3.5, "salary": 156100.0}, {"candidate_id": "EMP-1115", "department": "Product", "experience_years": 16.2, "performance_rating": 4.5, "salary": 133500.0}, {"candidate_id": "EMP-1116", "department": "Engineering", "experience_years": 21.9, "performance_rating": 4.0, "salary": 160100.0}, {"candidate_id": "EMP-1117", "department": "Finance", "experience_years": 20.3, "performance_rating": 4.0, "salary": 154700.0}, {"candidate_id": "EMP-1118", "department": "Analytics", "experience_years": 5.5, "performance_rating": 4.0, "salary": 78500.0}, {"candidate_id": "EMP-1119", "department": "Product", "experience_years": 22.4, "performance_rating": 3.5, "salary": 167100.0}, {"candidate_id": "EMP-1120", "department": "Engineering", "experience_years": 13.9, "performance_rating": 3.5, "salary": 118300.0}, {"candidate_id": "EMP-1121", "department": "Operations", "experience_years": 20.4, "performance_rating": 4.0, "salary": 155100.0}, {"candidate_id": "EMP-1122", "department": "Engineering", "experience_years": 22.5, "performance_rating": 4.0, "salary": 166100.0}, {"candidate_id": "EMP-1124", "department": "Finance", "experience_years": 3.6, "performance_rating": 4.5, "salary": 69400.0}, {"candidate_id": "EMP-1125", "department": "Analytics", "experience_years": 6.5, "performance_rating": 3.5, "salary": 83700.0}, {"candidate_id": "EMP-1126", "department": "Engineering", "experience_years": 13.0, "performance_rating": 3.5, "salary": 106800.0}, {"candidate_id": "EMP-1127", "department": "Product", "experience_years": 20.6, "performance_rating": 4.0, "salary": 160000.0}, {"candidate_id": "EMP-1128", "department": "Finance", "experience_years": 21.7, "performance_rating": 4.0, "salary": 161500.0}, {"candidate_id": "EMP-1129", "department": "Engineering", "experience_years": 1.2, "performance_rating": 4.0, "salary": 54600.0}, {"candidate_id": "EMP-1130", "department": "Product", "experience_years": 13.3, "performance_rating": 4.0, "salary": 117500.0}, {"candidate_id": "EMP-1131", "department": "Engineering", "experience_years": 13.0, "performance_rating": 4.5, "salary": 105500.0}, {"candidate_id": "EMP-1132", "department": "Operations", "experience_years": 6.3, "performance_rating": 3.5, "salary": 80400.0}, {"candidate_id": "EMP-1133", "department": "Engineering", "experience_years": 3.9, "performance_rating": 3.5, "salary": 66300.0}, {"candidate_id": "EMP-1134", "department": "Engineering", "experience_years": 9.1, "performance_rating": 3.0, "salary": 95000.0}, {"candidate_id": "EMP-1135", "department": "Engineering", "experience_years": 23.6, "performance_rating": 3.5, "salary": 171400.0}, {"candidate_id": "EMP-1136", "department": "Finance", "experience_years": 8.8, "performance_rating": 2.5, "salary": 89100.0}, {"candidate_id": "EMP-1137", "department": "Engineering", "experience_years": 13.5, "performance_rating": 3.5, "salary": 118600.0}, {"candidate_id": "EMP-1138", "department": "Product", "experience_years": 17.9, "performance_rating": 3.5, "salary": 141800.0}, {"candidate_id": "EMP-1139", "department": "Operations", "experience_years": 9.7, "performance_rating": 3.5, "salary": 100000.0}, {"candidate_id": "EMP-1140", "department": "Operations", "experience_years": 24.3, "performance_rating": 3.5, "salary": 177100.0}, {"candidate_id": "EMP-1141", "department": "Engineering", "experience_years": 24.1, "performance_rating": 2.5, "salary": 174300.0}, {"candidate_id": "EMP-1142", "department": "Finance", "experience_years": 7.0, "performance_rating": 2.5, "salary": 82700.0}, {"candidate_id": "EMP-1144", "department": "Product", "experience_years": 8.2, "performance_rating": 3.5, "salary": 92300.0}, {"candidate_id": "EMP-1145", "department": "Engineering", "experience_years": 7.8, "performance_rating": 3.0, "salary": 87600.0}, {"candidate_id": "EMP-1146", "department": "Operations", "experience_years": 1.9, "performance_rating": 3.5, "salary": 56300.0}, {"candidate_id": "EMP-1147", "department": "Finance", "experience_years": 15.6, "performance_rating": 4.0, "salary": 134600.0}, {"candidate_id": "EMP-1148", "department": "Engineering", "experience_years": 13.1, "performance_rating": 3.0, "salary": 105900.0}, {"candidate_id": "EMP-1149", "department": "Finance", "experience_years": 2.2, "performance_rating": 4.0, "salary": 59500.0}, {"candidate_id": "EMP-1150", "department": "Finance", "experience_years": 7.7, "performance_rating": 3.0, "salary": 84100.0}];
+
+    let chartInstance = null;
+
+    function initChart() {
+      const canvasEl = document.getElementById('regressionChart');
+      if (!canvasEl) return;
+      const ctx = canvasEl.getContext('2d');
+      
+      const scatterPoints = rawData.map(d => ({ x: d.experience_years, y: d.salary }));
+      
+      const maxExp = Math.max(...rawData.map(d => d.experience_years), 25);
+      const linePoints = [
+        { x: 0, y: intercept_c },
+        { x: maxExp, y: (slope_m * maxExp) + intercept_c }
+      ];
+      
+      const candidatePoint = [{ x: 15.0, y: (slope_m * 15.0) + intercept_c }];
+
+      if (typeof Chart !== 'undefined') {
+        chartInstance = new Chart(ctx, {
+          type: 'scatter',
+          data: {
+            datasets: [
+              {
+                label: 'Clean Employee Records',
+                data: scatterPoints,
+                backgroundColor: 'rgba(56, 189, 248, 0.65)',
+                borderColor: '#0284c7',
+                pointRadius: 5,
+                order: 2
+              },
+              {
+                label: 'Learned Regression Line (Y = MX + C)',
+                data: linePoints,
+                type: 'line',
+                borderColor: '#ef4444',
+                borderWidth: 2.5,
+                fill: false,
+                pointRadius: 0,
+                order: 1
+              },
+              {
+                label: '15-Year Candidate Deliverable',
+                data: candidatePoint,
+                backgroundColor: '#facc15',
+                borderColor: '#ca8a04',
+                pointRadius: 12,
+                pointHoverRadius: 15,
+                pointStyle: 'star',
+                order: 0
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                labels: { color: '#f8fafc', font: { size: 12 } }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(ctx) {
+                    return ctx.dataset.label + ': ' + ctx.parsed.x.toFixed(1) + ' Yrs, $' + ctx.parsed.y.toLocaleString('en-US', {maximumFractionDigits: 0});
+                  }
+                }
+              }
+            },
+            scales: {
+              x: {
+                title: { display: true, text: 'Years of Experience (Input X)', color: '#94a3b8' },
+                grid: { color: '#334155' },
+                ticks: { color: '#94a3b8' }
+              },
+              y: {
+                title: { display: true, text: 'Annual Compensation in USD (Output Y)', color: '#94a3b8' },
+                grid: { color: '#334155' },
+                ticks: {
+                  color: '#94a3b8',
+                  callback: function(val) { return '$' + val.toLocaleString(); }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    function updatePrediction() {
+      const exp = parseFloat(document.getElementById('expSlider').value);
+      document.getElementById('expVal').innerText = exp.toFixed(1) + ' Years';
+      
+      const pred = (slope_m * exp) + intercept_c;
+      const monthly = pred / 12.0;
+      const margin = 1.96 * rmse;
+      const minOffer = Math.max(0, pred - margin);
+      const maxOffer = pred + margin;
+
+      document.getElementById('livePredictedSalary').innerText = '$' + pred.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      document.getElementById('liveMonthlySalary').innerText = 'Equivalent to $' + monthly.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' / month';
+      document.getElementById('liveRange').innerText = '$' + minOffer.toLocaleString('en-US', { maximumFractionDigits: 0 }) + ' - $' + maxOffer.toLocaleString('en-US', { maximumFractionDigits: 0 });
+      document.getElementById('liveCalcBreakdown').innerText = 'Salary = (' + slope_m.toLocaleString('en-US', {maximumFractionDigits:2}) + ' * ' + exp.toFixed(1) + ') + ' + intercept_c.toLocaleString('en-US', {maximumFractionDigits:2}) + ' = $' + pred.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
+
+      if (chartInstance) {
+        chartInstance.data.datasets[2].data = [{ x: exp, y: pred }];
+        chartInstance.data.datasets[2].label = exp.toFixed(1) + '-Yr Candidate (' + (exp === 15 ? 'Target Deliverable' : 'Live') + ')';
+        chartInstance.update();
+      }
+    }
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+      if (tabId === 'chartTab' && chartInstance) {
+        chartInstance.resize();
+      }
+    }
+
+    function filterTable() {
+      const query = document.getElementById('tableSearch').value.toLowerCase();
+      const rows = document.querySelectorAll('#dataTable tbody tr');
+      rows.forEach(r => {
+        const text = r.innerText.toLowerCase();
+        r.style.display = text.includes(query) ? '' : 'none';
+      });
+    }
+
+    window.onload = function() {
+      initChart();
+    };
+  </script>
+</body>
+</html>

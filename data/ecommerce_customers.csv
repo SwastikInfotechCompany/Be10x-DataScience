@@ -1,0 +1,141 @@
+customer_id,customer_name,age,annual_spend,monthly_spend,purchase_frequency,preferred_category
+CUST-2001,Benjamin Brown,39,3813.06,317.75,18,Kitchenware
+CUST-2002,Amelia Singh,45,3877.56,323.13,12,Kids & Toys
+CUST-2003,Daniel Williams,30,3044.25,253.69,14,Digital Entertainment
+CUST-2004,Daniel Davis,23,2292.09,191.01,14,Digital Entertainment
+CUST-2005,Meera Das,72,9998.22,833.18,28,Gourmet Food
+CUST-2006,Olivia Rodriguez,43,4470.7,372.56,24,Family Essentials
+CUST-2007,Jack Jones,47,4901.99,408.5,14,Kids & Toys
+CUST-2008,Jack Miller,46,3959.65,329.97,19,Kids & Toys
+CUST-2009,Jack Jones,26,2341.52,195.13,15,Electronics & Gadgets
+CUST-2010,Diya Brown,44,3745.29,312.11,21,Kitchenware
+CUST-2011,Isha Reddy,64,10878.13,906.51,21,Gourmet Food
+CUST-2012,Vihaan Das,23,3128.25,260.69,12,Electronics & Gadgets
+CUST-2013,Meera Kapoor,45,18915.3,1576.27,42,Home Decor
+CUST-2014,James Jones,37,4693.91,391.16,11,Kitchenware
+CUST-2015,Henry Sharma,30,2910.39,242.53,12,Digital Entertainment
+CUST-2016,Evelyn Das,71,10573.49,881.12,27,Gourmet Food
+CUST-2017,Matthew Singh,64,10624.03,885.34,21,Gourmet Food
+CUST-2018,Henry Reddy,43,4701.11,391.76,13,Family Essentials
+CUST-2019,Jack Nair,24,3396.89,283.07,13,Digital Entertainment
+CUST-2020,Matthew Sharma,21,2847.89,237.32,15,Electronics & Gadgets
+CUST-2021,Anaya Mehta,43,4475.1,372.93,18,Kitchenware
+CUST-2022,Sanya Nair,72,8915.54,742.96,24,Home Appliances
+CUST-2023,Sanya Sharma,27,2595.18,216.26,13,Electronics & Gadgets
+CUST-2024,Noah Jones,67,10771.75,897.65,22,Home Appliances
+CUST-2025,Ella Williams,39,16228.55,1352.38,33,High-End Electronics
+CUST-2026,Charlotte Martinez,26,2577.69,214.81,15,Electronics & Gadgets
+CUST-2027,James Iyer,46,18742.4,1561.87,54,Luxury Watches & Jewelry
+CUST-2028,Arjun Jones,41,16394.02,1366.17,28,High-End Electronics
+CUST-2029,Anaya Johnson,47,18650.49,1554.21,39,Luxury Watches & Jewelry
+CUST-2030,Diya Rodriguez,39,18042.71,1503.56,60,Home Decor
+CUST-2031,Ella Singh,46,17207.38,1433.95,45,High-End Electronics
+CUST-2032,Amelia Smith,44,5347.6,445.63,15,Kitchenware
+CUST-2033,Matthew Nair,59,7633.56,636.13,28,Health & Wellness
+CUST-2034,Ava Smith,19,1980.33,165.03,11,Fashion & Apparel
+CUST-2035,Sanya Iyer,45,17176.55,1431.38,43,Luxury Watches & Jewelry
+CUST-2036,Isha Iyer,48,18601.07,1550.09,43,Luxury Watches & Jewelry
+CUST-2037,Alexander Jones,21,2738.2,228.18,18,Electronics & Gadgets
+CUST-2038,Amelia Brown,65,9116.53,759.71,14,Health & Wellness
+CUST-2039,Emma Williams,42,2600.0,216.67,12,Kids & Toys
+CUST-2040,Mia Sharma,47,18371.96,1531.0,35,Home Decor
+CUST-2041,Emma Johnson,59,9089.02,757.42,21,Health & Wellness
+CUST-2042,Ella Garcia,58,10083.26,840.27,22,Home Appliances
+CUST-2043,Anaya Nair,70,8863.88,738.66,22,Gourmet Food
+CUST-2044,Meera Kapoor,43,4480.26,373.36,15,Kitchenware
+CUST-2045,Harper Gupta,24,3064.87,255.41,20,Fashion & Apparel
+CUST-2046,Henry Brown,66,9678.07,806.51,15,Home Appliances
+CUST-2047,Isabella Smith,68,9480.65,790.05,30,Health & Wellness
+CUST-2048,Alexander Sharma,25,2779.93,231.66,11,Digital Entertainment
+CUST-2049,Ethan Brown,62,8925.6,743.8,17,Home Appliances
+CUST-2050,Ella Sharma,26,2136.81,178.07,6,Fashion & Apparel
+CUST-2051,James Jones,51,16176.78,1348.07,31,High-End Electronics
+CUST-2052,Rohan Gupta,64,11197.81,933.15,22,Health & Wellness
+CUST-2053,Sanya Martinez,40,4340.55,361.71,20,Kitchenware
+CUST-2054,Amelia Gupta,63,11308.15,942.35,31,Health & Wellness
+CUST-2055,Owen Martinez,45,16286.91,1357.24,38,High-End Electronics
+CUST-2056,Daniel Smith,43,4154.0,346.17,15,Kids & Toys
+CUST-2057,Diya Das,71,8257.37,688.11,30,Home Appliances
+CUST-2058,Mia Mehta,23,2554.09,212.84,13,Fashion & Apparel
+CUST-2059,Matthew Miller,50,18358.13,1529.84,39,Luxury Watches & Jewelry
+CUST-2060,Charlotte Das,39,15693.91,1307.83,29,Luxury Watches & Jewelry
+CUST-2061,Isha Sharma,18,3138.99,261.58,12,Digital Entertainment
+CUST-2062,Henry Smith,46,15176.24,1264.69,35,Luxury Watches & Jewelry
+CUST-2063,Isabella Davis,26,2278.54,189.88,15,Fashion & Apparel
+CUST-2064,Ethan Miller,40,20634.87,1719.57,46,Luxury Watches & Jewelry
+CUST-2065,Kabir Miller,23,2696.65,224.72,15,Fashion & Apparel
+CUST-2066,Ava Gupta,20,3517.05,293.09,16,Fashion & Apparel
+CUST-2067,Ava Iyer,22,3286.42,273.87,12,Digital Entertainment
+CUST-2068,Kabir Sharma,49,5729.43,477.45,15,Kitchenware
+CUST-2069,Abigail Williams,70,9064.92,755.41,18,Health & Wellness
+CUST-2070,Evelyn Rodriguez,24,3058.27,254.86,6,Electronics & Gadgets
+CUST-2071,Benjamin Miller,44,4645.55,387.13,16,Family Essentials
+CUST-2072,Henry Garcia,38,18260.45,1521.7,41,Home Decor
+CUST-2073,Benjamin Davis,59,10647.21,887.27,33,Gourmet Food
+CUST-2074,Aarav Brown,42,6200.0,516.67,20,Kitchenware
+CUST-2075,Diya Miller,47,5839.34,486.61,23,Kids & Toys
+CUST-2076,Evelyn Reddy,59,10564.43,880.37,22,Home Appliances
+CUST-2077,Anaya Sharma,47,3157.63,263.14,16,Kitchenware
+CUST-2078,Meera Das,38,19925.65,1660.47,45,High-End Electronics
+CUST-2079,Vihaan Kapoor,36,4969.62,414.13,18,Kids & Toys
+CUST-2080,Sanya Rodriguez,41,16294.7,1357.89,42,Home Decor
+CUST-2081,Emily Sharma,57,8818.86,734.91,27,Health & Wellness
+CUST-2082,Alexander Davis,62,9208.96,767.41,14,Health & Wellness
+CUST-2083,Kabir Iyer,70,9301.86,775.16,24,Health & Wellness
+CUST-2084,Aarav Patel,65,9336.85,778.07,28,Home Appliances
+CUST-2085,Charlotte Iyer,61,8907.33,742.28,31,Health & Wellness
+CUST-2086,Vihaan Rodriguez,46,18357.18,1529.77,25,Luxury Watches & Jewelry
+CUST-2087,Jack Jones,45,4007.57,333.96,18,Kitchenware
+CUST-2088,Meera Mehta,68,9613.36,801.11,24,Gourmet Food
+CUST-2089,Owen Brown,46,20585.24,1715.44,44,Luxury Watches & Jewelry
+CUST-2090,Abigail Brown,40,4739.58,394.96,17,Family Essentials
+CUST-2091,Sophia Singh,23,3695.93,307.99,8,Digital Entertainment
+CUST-2092,Ethan Brown,27,1872.18,156.02,14,Electronics & Gadgets
+CUST-2093,Sebastian Garcia,23,2784.39,232.03,14,Digital Entertainment
+CUST-2094,Mia Das,45,18923.49,1576.96,42,High-End Electronics
+CUST-2095,Sanya Das,20,3132.19,261.02,13,Electronics & Gadgets
+CUST-2096,Jack Rodriguez,66,9887.79,823.98,22,Home Appliances
+CUST-2097,Benjamin Singh,39,4488.4,374.03,26,Kids & Toys
+CUST-2098,Henry Davis,67,10644.06,887.0,30,Gourmet Food
+CUST-2099,Diya Sharma,39,15886.57,1323.88,36,Home Decor
+CUST-2100,Arjun Martinez,66,9828.36,819.03,28,Health & Wellness
+CUST-2101,Liam Kapoor,74,9151.29,762.61,32,Home Appliances
+CUST-2102,Diya Patel,29,2219.5,184.96,20,Fashion & Apparel
+CUST-2103,Alexander Johnson,73,11703.55,975.3,20,Home Appliances
+CUST-2104,Ava Nair,39,4549.88,379.16,8,Kids & Toys
+CUST-2105,Evelyn Gupta,29,3462.2,288.52,14,Fashion & Apparel
+CUST-2106,Emily Johnson,24,2488.43,207.37,18,Fashion & Apparel
+CUST-2107,Owen Martinez,48,18145.84,1512.15,42,Home Decor
+CUST-2108,Isabella Johnson,24,3501.94,291.83,13,Fashion & Apparel
+CUST-2109,Charlotte Miller,43,5162.22,430.19,16,Kitchenware
+CUST-2110,Sanya Brown,41,16885.58,1407.13,46,Home Decor
+CUST-2111,Alexander Miller,42,4102.57,341.88,13,Kitchenware
+CUST-2112,Lucas Brown,36,3911.57,325.96,13,Family Essentials
+CUST-2113,Rohan Iyer,50,17620.8,1468.4,46,Home Decor
+CUST-2114,Diya Williams,46,21952.27,1829.36,36,High-End Electronics
+CUST-2115,Daniel Das,65,9024.49,752.04,24,Health & Wellness
+CUST-2116,Rohan Smith,46,17242.46,1436.87,39,Luxury Watches & Jewelry
+CUST-2117,Anaya Williams,25,2686.45,223.87,8,Fashion & Apparel
+CUST-2118,Emily Nair,43,17476.64,1456.39,42,Luxury Watches & Jewelry
+CUST-2119,Liam Reddy,24,3356.16,279.68,17,Electronics & Gadgets
+CUST-2120,Mia Kapoor,57,10539.37,878.28,26,Home Appliances
+CUST-2121,Ella Gupta,40,18859.34,1571.61,32,High-End Electronics
+CUST-2122,Emily Miller,42,19453.75,1621.15,39,Luxury Watches & Jewelry
+CUST-2123,Daniel Reddy,64,10239.45,853.29,27,Gourmet Food
+CUST-2124,Emma Kapoor,39,3663.61,305.3,11,Kids & Toys
+CUST-2125,Isabella Reddy,40,4098.8,341.57,22,Kids & Toys
+CUST-2126,Matthew Iyer,54,16040.51,1336.71,41,Home Decor
+CUST-2127,Emily Johnson,27,2886.39,240.53,13,Electronics & Gadgets
+CUST-2128,Kabir Kapoor,41,2778.08,231.51,15,Kitchenware
+CUST-2129,Lucas Brown,21,3148.9,262.41,11,Digital Entertainment
+CUST-2130,Diya Smith,39,5770.98,480.91,15,Kitchenware
+CUST-2131,Aarav Rodriguez,40,4106.57,342.21,25,Kitchenware
+CUST-2132,Ella Rodriguez,37,3597.82,299.82,18,Kids & Toys
+CUST-2133,Amelia Smith,42,17483.47,1456.96,43,High-End Electronics
+CUST-2134,Liam Singh,45,16245.13,1353.76,27,High-End Electronics
+CUST-2135,Owen Mehta,48,5364.75,447.06,11,Kitchenware
+CUST-2136,Charlotte Nair,25,3531.42,294.29,20,Fashion & Apparel
+CUST-2137,Jack Singh,23,3486.55,290.55,12,Electronics & Gadgets
+CUST-2138,Ava Rodriguez,42,19141.4,1595.12,30,Home Decor
+CUST-2139,Owen Martinez,42,4917.51,409.79,16,Family Essentials
+CUST-2140,Lucas Williams,64,10206.91,850.58,25,Gourmet Food

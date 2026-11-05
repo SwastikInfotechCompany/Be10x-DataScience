@@ -1,0 +1,27 @@
+ShopEase Retail Annual Summary — 2024
+Total net revenue: 4138.48
+Total profit: 1854.48
+Best-profit category: Electronics (756.38)
+Busiest order weekday: Sunday
+Revenue/discount Pearson correlation: -0.197
+Missing discounts filled with 0: 1
+
+Top 10 customers by lifetime value:
+customer_id customer_name       city  region lifetime_value
+       C011   Advik Joshi     Indore Central         442.96
+       C015   Atharv Shah      Surat    West         439.97
+       C004   Anaya Singh     Jaipur   North         369.97
+       C009   Rohan Gupta    Lucknow   North         339.97
+       C002   Diya Sharma      Delhi   North         260.96
+       C006    Isha Reddy  Hyderabad   South         257.48
+       C003  Vihaan Patel  Ahmedabad    West         257.46
+       C001   Aarav Mehta     Mumbai    West         250.46
+       C005    Arjun Nair      Kochi   South         237.45
+       C014   Myra Kapoor Chandigarh   North         235.46
+
+Category profitability:
+   category revenue profit  units_sold
+Electronics 1850.38 756.38          12
+     Sports  944.84 452.84          17
+   Clothing  808.92 344.93           8
+       Home  534.33 300.33          18

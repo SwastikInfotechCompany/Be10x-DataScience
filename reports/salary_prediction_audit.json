@@ -1,0 +1,69 @@
+{
+  "project": "Industrial Data Analytics - Part 1: Predictive Analytics",
+  "cleaning_audit": {
+    "initial_rows": 165,
+    "final_rows": 141,
+    "retention_pct": 85.45,
+    "duplicates_removed": 15,
+    "nulls_imputed": {
+      "experience_years": 8,
+      "performance_rating": 6,
+      "salary": 6
+    },
+    "imputation_method": "Median Filling",
+    "median_values_used": {
+      "experience_years": 13.0,
+      "performance_rating": 3.5,
+      "salary": 105900.0
+    },
+    "outliers_removed": 9,
+    "salary_bounds": {
+      "lower_bound": 25000.0,
+      "upper_bound": 240425.0
+    },
+    "experience_bounds": {
+      "lower_bound": 0.0,
+      "upper_bound": 38.74
+    }
+  },
+  "model_results": {
+    "equation": "Y = 5,176.59 * X + 48,024.45",
+    "equation_latex": "Salary = 5,176.59 \\times \\text{Experience} + 48,024.45",
+    "slope_m": 5176.59,
+    "intercept_c": 48024.45,
+    "metrics": {
+      "mae": 2267.79,
+      "mse": 7954566.08,
+      "rmse": 2820.38,
+      "r2_score": 0.9957,
+      "r2_percentage": 99.57,
+      "r2_full_dataset": 0.9902,
+      "mae_full_dataset": 2633.66,
+      "accuracy_pct": 99.57,
+      "is_budget_grade_95pct": true
+    },
+    "multi_feature_model": {
+      "slope_experience": 5172.406004817541,
+      "slope_rating": 513.0502214658604,
+      "intercept": 46206.403238157975,
+      "r2": 0.9962820750054635,
+      "mae": 2071.8222727988
+    }
+  },
+  "candidate_15_yr_prediction": {
+    "candidate_experience_years": 15.0,
+    "predicted_annual_salary": 125673.29,
+    "predicted_monthly_salary": 10472.77,
+    "margin_of_error_95pct": 5527.94,
+    "recommended_salary_range": {
+      "min_offer": 120145.34,
+      "target_offer": 125673.29,
+      "max_offer": 131201.23
+    },
+    "multi_feature_prediction_with_rating": {
+      "rating": 4.0,
+      "predicted_salary": 125844.69
+    },
+    "step_by_step_calculation": "Predicted Salary = (5,176.59 * 15.0) + 48,024.45 = $125,673.29"
+  }
+}

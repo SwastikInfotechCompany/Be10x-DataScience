@@ -1,0 +1,9 @@
+product_id,product_name,category,unit_price,unit_cost
+P001,Trail Running Shoes,Sports,89.99,48.00
+P002,Yoga Mat,Sports,29.99,12.00
+P003,Wireless Headphones,Electronics,129.99,72.00
+P004,Smart Watch,Electronics,199.99,118.00
+P005,Insulated Bottle,Home,24.99,9.00
+P006,Desk Lamp,Home,44.99,21.00
+P007,Winter Jacket,Clothing,149.99,82.00
+P008,Everyday Backpack,Clothing,69.99,34.00
